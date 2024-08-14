@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+  </head>
+
+  <body>
+    <header></header>
+    <main>
+      <div class="login_body">
+        <div class="login-box">
+          <h2>Diário de Bordo</h2>
+          <h2> {{ ra }}</h2>
+          <form method="post">
+            <div class="input_box">
+              <input id="ra" name="ra" type="text" placeholder="Informe Somente Números" required maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            </div>
+
+            <!-- <div class="input_box">
+              <input id="password" name="password" type="password" placeholder="Senha" required />
+            </div> -->
+
+            <div>
+              <button class="submit">Entrar</button>
+            </div>
+          </form>
+
+          <div>
+            <div class="support">
+              <!-- Adicionado url_for para o href -->
+              <a href="{{ url_for('cadastro') }}">Cadastre-se</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer></footer>
+
+  </body>
+</html>
