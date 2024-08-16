@@ -4,24 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diário de Bordo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/diariobordo.css') }}">
 </head>
 <body>
     <header>
         <h1>Diário de Bordo</h1>
+        <hr>
         <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><h4>Seja bem vindo {{ nome }}</h4></li>
+            <ul class="ul_left">
+                <li><a href=""><img src="#" alt="Logo" class="logo"></a></li>
+                <li><a href="/logar">Home</a></li>
+                <li><a href="#">Entradas</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><h4>Seja bem-vindo, {{ nome }}</h4></li>
+            </ul>
+            <ul class="ul_right">
                 <li><a href="#">Sair</a></li>
             </ul>
         </nav>
+        <hr>
     </header>
     <main>
-        <div class="diariobordo">
-            
+        <div class="main-content">
+            <section class="new-entry">
+                <h2>Adicionar Nova Entrada</h2>
+                <form action="#" method="POST">
+                    <label for="title">Título:</label>
+                    <input type="text" id="title" name="title" required>
+
+                    <label for="content">Conteúdo:</label>
+                    <textarea id="content" name="content" rows="5" required></textarea>
+
+                    <button type="submit">Adicionar Entrada</button>
+                </form>
+            </section>
+            <section class="recent-entries">
+                <h2>Entradas Recentes</h2>
+                <ul>
+                    {% for entry in recent_entries %}
+                        <li>
+                            <a href="#">{{ entry.title }}</a>
+                            <p>{{ entry.content[:100] }}...</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
         </div>
     </main>
-    <footer></footer>
+    <footer>
+        <p>&copy; 2024 Diário de Bordo. Todos os direitos reservados.</p>
+        <p><a href="#">Contato</a> | <a href="#">Política de Privacidade</a></p>
+    </footer>
 </body>
 </html>

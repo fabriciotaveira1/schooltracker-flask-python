@@ -74,15 +74,67 @@ def inserir_aluno():
     mensagem = "cadastro efetuado com sucesso"
     return render_template('index.html',msgbanco=mensagem)
 
-@app.route('/logar',methods=['POST'])
+@app.route('/logar', methods=['POST'])
 def logar_ra():
-    ra = request.form['ra']
+    try:
+        # Obtém o valor do campo 'ra' e converte para inteiro
+        ra = int(request.form['ra'])
+    except ValueError:
+        # Caso a conversão falhe, retorna uma mensagem de erro
+        mensagem = "RA inválido. Certifique-se de que está digitando apenas números."
+        return render_template('index.html', mensagem=mensagem)
+
+    # Consulta o banco de dados para verificar se o aluno existe
     aluno_existente = session.query(Aluno).filter_by(ra=ra).first()
-    if ra == aluno_existente:
-        return render_template('diariobordo.html',ra=ra)
+    
+    
+    if aluno_existente:
+        # recupera o nome do aluno
+        nome = aluno_existente.nome
+        # Se o aluno for encontrado, renderiza o template com o RA
+        return render_template('diariobordo.html', nome=nome)
     else:
-        mensagem = "ra inválido"
-        return render_template('index.html',mensagem=mensagem)
+        # Se o aluno não for encontrado, retorna uma mensagem de erro
+        mensagem = "RA inválido"
+        return render_template('index.html', mensagem=mensagem)
+    
+@app.route('/alunos', methods=['GET'])
+def listar_alunos():
+    try:
+        alunos = session.query(Aluno).all()
+    except ValueError:
+        session.rollback()
+        mensagem = 'Erro ao tentar buscar alunos'
+        return render_template('listar_alunos.html', mensagem=mensagem)
+    finally:
+        session.close()
+    
+    return render_template('listaralunos.html', alunos=alunos)
+    
+@app.route('/deletar/<int:aluno_id>', methods=['DELETE'])
+def deletar(aluno_id):
+    if request.form.get('_method') == 'DELETE':
+        try:
+            aluno_existente = session.query(Aluno).filter_by(id=aluno_id).first()
+            
+            if aluno_existente:
+                session.delete(aluno_existente)
+                session.commit()
+                mensagem = 'Aluno deletado com sucesso'
+                return render_template('listaralunos.html', mensagem=mensagem)
+            else:
+                mensagem = 'Aluno não encontrado'
+                return render_template('listaralunos.html', mensagem=mensagem)
+        except ValueError:
+            session.rollback()
+            mensagem = 'Erro ao tentar deletar aluno'
+            return render_template('listaralunos.html', mensagem=mensagem)
+        finally:
+            session.close()
+        
+        return render_template('listaralunos.html', mensagem=mensagem)
+    else:
+        return render_template('listaralunos.html') # Redireciona se o método não for DELETE
 
 if __name__ == "__main__":
     app.run(debug=True)
