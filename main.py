@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request
+from flask import Flask, redirect,render_template,request, url_for
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -105,14 +105,15 @@ def listar_alunos():
     except ValueError:
         session.rollback()
         mensagem = 'Erro ao tentar buscar alunos'
-        return render_template('listar_alunos.html', mensagem=mensagem)
+        return redirect(url_for('listar_alunos'))
     finally:
         session.close()
     
     return render_template('listaralunos.html', alunos=alunos)
     
-@app.route('/deletar/<int:aluno_id>', methods=['DELETE'])
+@app.route('/deletar/<int:aluno_id>', methods=['POST'])
 def deletar(aluno_id):
+    # Verifica o método simulado
     if request.form.get('_method') == 'DELETE':
         try:
             aluno_existente = session.query(Aluno).filter_by(id=aluno_id).first()
@@ -121,20 +122,57 @@ def deletar(aluno_id):
                 session.delete(aluno_existente)
                 session.commit()
                 mensagem = 'Aluno deletado com sucesso'
-                return render_template('listaralunos.html', mensagem=mensagem)
             else:
                 mensagem = 'Aluno não encontrado'
-                return render_template('listaralunos.html', mensagem=mensagem)
-        except ValueError:
+        except Exception as e:
             session.rollback()
-            mensagem = 'Erro ao tentar deletar aluno'
-            return render_template('listaralunos.html', mensagem=mensagem)
+            mensagem = f'Erro ao tentar deletar aluno: {str(e)}'
         finally:
             session.close()
-        
-        return render_template('listaralunos.html', mensagem=mensagem)
-    else:
-        return render_template('listaralunos.html') # Redireciona se o método não for DELETE
+
+        return redirect(url_for('listar_alunos'))
+    
+    # Se não for DELETE, pode-se retornar um erro ou redirecionar
+    return 'Método não permitido', 405
+
+@app.route('/atualizar/<int:aluno_id>', methods=['POST'])
+def atualizar(aluno_id):
+    # Verifica o método simulado
+    if request.form.get('_method') == 'PUT':
+        try:
+            # Obtém os dados do formulário
+            ra = request.form.get('ra')
+            nome = request.form.get('nome')
+            tempoestudo = request.form.get('tempoestudo')
+            rendafamiliar = request.form.get('rendafamiliar')
+
+            # Verifica se todos os dados necessários foram fornecidos
+            if not ra or not nome or not tempoestudo or not rendafamiliar:
+                return 'Dados insuficientes para atualização', 400
+
+            aluno_existente = session.query(Aluno).filter_by(id=aluno_id).first()
+            
+            if aluno_existente:
+                # Atualiza as informações do aluno
+                aluno_existente.ra = ra
+                aluno_existente.nome = nome
+                aluno_existente.tempoestudo = tempoestudo
+                aluno_existente.rendafamiliar = rendafamiliar
+                session.commit()
+                mensagem = 'Aluno atualizado com sucesso'
+            else:
+                mensagem = 'Aluno não encontrado'
+        except Exception as e:
+            session.rollback()
+            mensagem = f'Erro ao tentar atualizar aluno: {str(e)}'
+        finally:
+            session.close()
+
+        return redirect(url_for('listar_alunos'))
+    
+    # Se não for PUT, pode-se retornar um erro ou redirecionar
+    return 'Método não permitido', 405
+
 
 if __name__ == "__main__":
     app.run(debug=True)

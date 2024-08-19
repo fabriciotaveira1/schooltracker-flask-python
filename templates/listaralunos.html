@@ -45,7 +45,7 @@
                         <td>{{ aluno.tempoestudo }}</td>
                         <td>{{ aluno.rendafamiliar }}</td>
                         <td>
-                            <a href="/editar/{{ aluno.id }}" class="edit-link">Editar</a>
+                            <a href="#" class="edit-link" data-toggle="modal" data-target="#editModal" data-id="{{ aluno.id }}" data-ra="{{ aluno.ra }}" data-nome="{{ aluno.nome }}" data-tempoestudo="{{ aluno.tempoestudo }}" data-rendafamiliar="{{ aluno.rendafamiliar }}">Editar</a>
                             <form action="{{ url_for('deletar', aluno_id=aluno.id) }}" method="post" class="delete-form">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="delete-link">Deletar</button>
@@ -60,9 +60,12 @@
         <p>Nenhum aluno cadastrado.</p>
         {% endif %}
     </main>
+    
     <footer>
         <p>&copy; 2024 Diário de Bordo. Todos os direitos reservados.</p>
         <p><a href="#">Contato</a> | <a href="#">Política de Privacidade</a></p>
     </footer>
+
+    
 </body>
 </html>
