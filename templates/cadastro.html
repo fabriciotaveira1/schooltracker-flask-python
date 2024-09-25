@@ -14,18 +14,15 @@
     </header>
     <main>
         <div class="form" id="form">
-            <form action="/novoaluno"  method="post"> 
+            <form action="/novo_usuario"  method="post"> 
                 <label>Nome: </label> 
                 <input id="nome" name="nome" type="text" required placeholder="Nome"/> 
 
-                <label>RA:</label> 
-                <input id="ra" name="ra" type="text" placeholder="Informe Somente Números" required maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <label>Email:</label> 
+                <input id="email" name="email" type="email" placeholder="Email" required>
 
-                <label>Tempo:</label> 
-                <input id="tempoestudo" name="tempoestudo" type="number" placeholder="Tempo de estudo mensal"/>
-
-                <label>Renda familiar</label>
-                <input id="rendafamiliar" name="rendafamiliar" type="number" placeholder="Renda familiar mensal"/>
+                <label>Senha:</label> 
+                <input id="senha" name="senha" type="password" placeholder="Senha"/>
                 
                 <button type="submit">Cadastrar</button>
         </div>

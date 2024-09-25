@@ -26,19 +26,16 @@
           <form action="/logar" method="post">
             <div class="input_box">
               <input
-                id="ra"
-                name="ra"
-                type="text"
-                placeholder="Informe Somente Números"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Informe seu Email"
                 required
-                maxlength="8"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
               />
             </div>
-
-            <!-- <div class="input_box">
-              <input id="password" name="password" type="password" placeholder="Senha" required />
-            </div> -->
+            <div class="input_box">
+              <input id="senha" name="senha" type="password" placeholder="Informe sua Senha" required />
+            </div>
 
             <div>
               <button class="submit">Entrar</button>

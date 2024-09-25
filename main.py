@@ -10,7 +10,9 @@ from sqlalchemy import create_engine, MetaData
 
 # Importa a função `automap_base`, que é usada para refletir um banco de dados existente em classes ORM automaticamente
 from sqlalchemy.ext.automap import automap_base
-from Model.aluno import Aluno
+from Model.Usuario import Usuario
+from Model.Registro import Registro
+from Model.Viagem import Viagem
 
 import urllib.parse
 
@@ -33,7 +35,9 @@ Base = automap_base(metadata=metadata)
 Base.prepare()
 
 # Acessando a tabela 'aluno' mapeada
-Aluno = Base.classes.aluno
+Usuario = Base.classes.Usuario
+Registro = Base.classes.Registro
+Viagem = Base.classes.Viagem
 
 # Criar a sessão do SQLAlchemy
 Session = sessionmaker(bind=engine)
@@ -47,24 +51,23 @@ def index():
 def cadastro():
     return render_template("cadastro.html")
 
-@app.route("/novoaluno", methods=["POST"])
+@app.route("/novo_usuario", methods=["POST"])
 def inserir_aluno():
-    ra = request.form['ra']
     nome = request.form['nome']
-    tempoestudo = int(request.form['tempoestudo'])
-    rendafamiliar = float(request.form['rendafamiliar'])
+    email = request.form['email']
+    senha = request.form['senha']
 
-    # Verifica se o RA já existe no banco de dados
-    aluno_existente = session.query(Aluno).filter_by(ra=ra).first()
+    # Verifica se o email já existe no banco de dados
+    usuario_existente = session.query(Usuario).filter_by(email=email).first()
 
-    if aluno_existente:
-        mensagem = "RA já cadastrado no sistema."
-        return render_template('index.html', msgbanco=mensagem)
+    if usuario_existente:
+        mensagem = "Email já cadastrado no sistema."
+        return render_template('index.html', mensagem=mensagem)
 
-    aluno = Aluno(ra=ra,nome=nome,tempoestudo=tempoestudo,rendafamiliar=rendafamiliar)
+    usuario = Usuario(nome=nome,email=email,senha=senha)
     
     try:
-        session.add(aluno) 
+        session.add(usuario) 
         session.commit() 
     except:
         session.rollback()
@@ -72,32 +75,35 @@ def inserir_aluno():
     finally:
         session.close()
     mensagem = "cadastro efetuado com sucesso"
-    return render_template('index.html',msgbanco=mensagem)
+    return render_template('index.html',mensagem=mensagem)
 
 @app.route('/logar', methods=['POST'])
 def logar_ra():
     try:
-        # Obtém o valor do campo 'ra' e converte para inteiro
-        ra = int(request.form['ra'])
+        # Obtém o valor do campo 'email'
+        email = request.form['email']
+        senha = request.form['senha']
+
+        # Consulta o banco de dados para verificar se o email e senha correspondem a um aluno
+        usuario_existente = session.query(Usuario).filter_by(email=email, senha=senha).first()
+
+        if usuario_existente:
+            # Se o email e senha correspondem, armazena o ID do Usuário na sessão
+            session['usuario_id'] = usuario_existente.id
+            # Se o email e senha correspondem, redireciona para a tela do diário de bordo
+            return redirect(url_for('diario_bordo'))
+        else:
+            # Se o email e senha não correspondem, retorna uma mensagem de erro
+            mensagem = "Email ou senha inválidos"
+            return render_template('index.html', mensagem=mensagem)
     except ValueError:
         # Caso a conversão falhe, retorna uma mensagem de erro
-        mensagem = "RA inválido. Certifique-se de que está digitando apenas números."
+        mensagem = "Email ou senha inválido. Certifique-se de que está digitando corretamente."
         return render_template('index.html', mensagem=mensagem)
 
-    # Consulta o banco de dados para verificar se o aluno existe
-    aluno_existente = session.query(Aluno).filter_by(ra=ra).first()
-    
-    
-    if aluno_existente:
-        # recupera o nome do aluno
-        nome = aluno_existente.nome
-        # Se o aluno for encontrado, renderiza o template com o RA
-        return render_template('diariobordo.html', nome=nome)
-    else:
-        # Se o aluno não for encontrado, retorna uma mensagem de erro
-        mensagem = "RA inválido"
-        return render_template('index.html', mensagem=mensagem)
-    
+
+# ALTERAR DAQUI PARA BAIXO ------------------------------
+
 @app.route('/alunos', methods=['GET'])
 def listar_alunos():
     try:
