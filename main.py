@@ -1,26 +1,18 @@
-from flask import Flask, redirect,render_template,request, url_for
-
+from flask import Flask, redirect, render_template, request, url_for, session as session_flask
 from flask_sqlalchemy import SQLAlchemy
-
-# Importa a função `sessionmaker`, que é usada para criar uma nova sessão para interagir com o banco de dados
 from sqlalchemy.orm import sessionmaker
-
-# Importa as funções `create_engine` para estabelecer uma conexão com o banco de dados e `MetaData` para trabalhar com metadados do banco de dados
 from sqlalchemy import create_engine, MetaData
-
-# Importa a função `automap_base`, que é usada para refletir um banco de dados existente em classes ORM automaticamente
+from services.api_clima import ApiClima
 from sqlalchemy.ext.automap import automap_base
 from Model.Usuario import Usuario
 from Model.Registro import Registro
 from Model.Viagem import Viagem
-
 import urllib.parse
 
 app = Flask(__name__)
 
 user = 'root'
 password = urllib.parse.quote_plus('senai@123')
-
 host = 'localhost'
 database = 'schooltracker'
 connection_string = f'mysql+pymysql://{user}:{password}@{host}/{database}'
@@ -64,7 +56,7 @@ def inserir_aluno():
         mensagem = "Email já cadastrado no sistema."
         return render_template('index.html', mensagem=mensagem)
 
-    usuario = Usuario(nome=nome,email=email,senha=senha)
+    usuario = Usuario(nome=nome, email=email, senha=senha)
     
     try:
         session.add(usuario) 
@@ -74,110 +66,152 @@ def inserir_aluno():
         raise 
     finally:
         session.close()
-    mensagem = "cadastro efetuado com sucesso"
-    return render_template('index.html',mensagem=mensagem)
+        
+    mensagem = "Cadastro efetuado com sucesso."
+    return render_template('index.html', mensagem=mensagem)
 
 @app.route('/logar', methods=['POST'])
 def logar_ra():
     try:
-        # Obtém o valor do campo 'email'
         email = request.form['email']
         senha = request.form['senha']
 
-        # Consulta o banco de dados para verificar se o email e senha correspondem a um aluno
         usuario_existente = session.query(Usuario).filter_by(email=email, senha=senha).first()
 
         if usuario_existente:
-            # Se o email e senha correspondem, armazena o ID do Usuário na sessão
-            session['usuario_id'] = usuario_existente.id
-            # Se o email e senha correspondem, redireciona para a tela do diário de bordo
+            session_flask['usuario_id'] = usuario_existente.id
             return redirect(url_for('diario_bordo'))
         else:
-            # Se o email e senha não correspondem, retorna uma mensagem de erro
             mensagem = "Email ou senha inválidos"
             return render_template('index.html', mensagem=mensagem)
     except ValueError:
-        # Caso a conversão falhe, retorna uma mensagem de erro
         mensagem = "Email ou senha inválido. Certifique-se de que está digitando corretamente."
         return render_template('index.html', mensagem=mensagem)
 
+@app.route("/diario_bordo")
+def diario_bordo():
+    usuario_id = session_flask.get('usuario_id')
 
-# ALTERAR DAQUI PARA BAIXO ------------------------------
+    if usuario_id not in session_flask:
+        return redirect(url_for('index'))
 
-@app.route('/alunos', methods=['GET'])
-def listar_alunos():
+    recent_entries = session.query(Registro).filter_by(id_usuario=usuario_id).all()
+
+    entries_data = []
+    for entry in recent_entries:
+        entries_data.append({
+            'title': entry.title,
+            'cidade': entry.cidade,
+            'temperatura': entry.temperatura,
+            'velocidade_do_vento': entry.velocidade_do_vento,
+            'umidade_do_ar': entry.umidade_do_ar,
+            'observacoes': entry.observacoes,
+        })
+
+    return render_template("diariobordo.html", recent_entries=entries_data, nome=session_flask.get('usuario_nome'))
+
+@app.route("/adicionar_entrada", methods=["POST"])
+def adicionar_entrada():
+    id_viagem = request.form['id_viagem']
+    data_registro = request.form['data_registro']
+    cidade = request.form['cidade']
+    observacoes = request.form['observacoes']
+
+    if 'usuario_id' not in session_flask:
+        mensagem = "Você precisa estar logado para adicionar uma entrada."
+        return render_template('index.html', mensagem=mensagem)
+
+    viagem_existente = session.query(Viagem).filter_by(id_viagem=id_viagem).first()
+    if not viagem_existente:
+        mensagem = "A viagem especificada não foi encontrada."
+        return render_template('diario_bordo.html', mensagem=mensagem)
+
+    nova_entrada = Registro(
+        id_viagem=id_viagem,
+        data_registro=data_registro,
+        cidade=cidade,
+        observacoes=observacoes
+    )
+
+    api_clima = ApiClima('da7d7856826a4e9daae192630241109')  # Substitua pela sua chave de API
+    nova_entrada.registrar_dados_clima(api_clima, cidade)
+
     try:
-        alunos = session.query(Aluno).all()
-    except ValueError:
+        session.add(nova_entrada)
+        session.commit()
+    except Exception as e:
         session.rollback()
-        mensagem = 'Erro ao tentar buscar alunos'
-        return redirect(url_for('listar_alunos'))
+        mensagem = f"Ocorreu um erro ao registrar a entrada: {str(e)}"
+        return render_template('diario_bordo.html', mensagem=mensagem)
     finally:
         session.close()
+
+    mensagem = "Entrada adicionada com sucesso."
+    return redirect(url_for('diario_bordo', mensagem=mensagem))
+
+@app.route("/viagens", methods=["GET"])
+def viagens():
+    # Busca todas as viagens do banco de dados
+    viagens_existentes = session.query(Viagem).all()
+    return render_template("viagens.html", viagens=viagens_existentes)
+
+@app.route("/adicionar_viagem", methods=["POST"])
+def adicionar_viagem():
+    data_inicio = request.form['data_inicio']
+    localizacao = request.form['localizacao']
+
+    # Obtém o ID do usuário logado
+    usuario_id = session.get('usuario_id')
+
+    nova_viagem = Viagem(data_inicio=data_inicio, localizacao=localizacao, id_usuario=usuario_id)
     
-    return render_template('listaralunos.html', alunos=alunos)
-    
-@app.route('/deletar/<int:aluno_id>', methods=['POST'])
-def deletar(aluno_id):
-    # Verifica o método simulado
-    if request.form.get('_method') == 'DELETE':
+    try:
+        session.add(nova_viagem)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        mensagem = f"Ocorreu um erro ao adicionar a viagem: {str(e)}"
+        return render_template('viagens.html', mensagem=mensagem)
+    finally:
+        session.close()
+
+    return redirect(url_for('viagens'))
+
+@app.route("/editar_viagem/<int:id_viagem>", methods=["GET", "POST"])
+def editar_viagem(id_viagem):
+    viagem = session.query(Viagem).filter_by(id_viagem=id_viagem).first()
+
+    if request.method == "POST":
+        viagem.data_inicio = request.form['data_inicio']
+        viagem.localizacao = request.form['localizacao']
+
         try:
-            aluno_existente = session.query(Aluno).filter_by(id=aluno_id).first()
-            
-            if aluno_existente:
-                session.delete(aluno_existente)
-                session.commit()
-                mensagem = 'Aluno deletado com sucesso'
-            else:
-                mensagem = 'Aluno não encontrado'
+            session.commit()
         except Exception as e:
             session.rollback()
-            mensagem = f'Erro ao tentar deletar aluno: {str(e)}'
+            mensagem = f"Ocorreu um erro ao editar a viagem: {str(e)}"
+            return render_template('viagens.html', mensagem=mensagem)
         finally:
             session.close()
 
-        return redirect(url_for('listar_alunos'))
-    
-    # Se não for DELETE, pode-se retornar um erro ou redirecionar
-    return 'Método não permitido', 405
+        return redirect(url_for('viagens'))
 
-@app.route('/atualizar/<int:aluno_id>', methods=['POST'])
-def atualizar(aluno_id):
-    # Verifica o método simulado
-    if request.form.get('_method') == 'PUT':
-        try:
-            # Obtém os dados do formulário
-            ra = request.form.get('ra')
-            nome = request.form.get('nome')
-            tempoestudo = request.form.get('tempoestudo')
-            rendafamiliar = request.form.get('rendafamiliar')
+    return render_template("viagens.html", viagem=viagem)
 
-            # Verifica se todos os dados necessários foram fornecidos
-            if not ra or not nome or not tempoestudo or not rendafamiliar:
-                return 'Dados insuficientes para atualização', 400
+@app.route("/deletar_viagem/<int:id_viagem>", methods=["GET"])
+def deletar_viagem(id_viagem):
+    viagem = session.query(Viagem).filter_by(id_viagem=id_viagem).first()
+    try:
+        session.delete(viagem)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        mensagem = f"Ocorreu um erro ao deletar a viagem: {str(e)}"
+        return render_template('viagens.html', mensagem=mensagem)
+    finally:
+        session.close()
 
-            aluno_existente = session.query(Aluno).filter_by(id=aluno_id).first()
-            
-            if aluno_existente:
-                # Atualiza as informações do aluno
-                aluno_existente.ra = ra
-                aluno_existente.nome = nome
-                aluno_existente.tempoestudo = tempoestudo
-                aluno_existente.rendafamiliar = rendafamiliar
-                session.commit()
-                mensagem = 'Aluno atualizado com sucesso'
-            else:
-                mensagem = 'Aluno não encontrado'
-        except Exception as e:
-            session.rollback()
-            mensagem = f'Erro ao tentar atualizar aluno: {str(e)}'
-        finally:
-            session.close()
-
-        return redirect(url_for('listar_alunos'))
-    
-    # Se não for PUT, pode-se retornar um erro ou redirecionar
-    return 'Método não permitido', 405
+    return redirect(url_for('viagens'))
 
 
 if __name__ == "__main__":

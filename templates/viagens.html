@@ -1,0 +1,65 @@
+<!-- viagens.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="caminho/para/seu/styles.css"> <!-- Link para o CSS externo -->
+    <title>Gerenciar Viagens</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciar Viagens</h1>
+        
+        <!-- Formulário para adicionar uma nova viagem -->
+        <form id="viagemForm" action="{{ url_for('adicionar_viagem') }}" method="POST">
+            <label for="data_inicio">Data de Início:</label>
+            <input type="date" name="data_inicio" required>
+            
+            <label for="localizacao">Localização:</label>
+            <input type="text" name="localizacao" required>
+            
+            <button type="submit">Adicionar Viagem</button>
+        </form>
+
+        <!-- Condicional para exibir o formulário de edição se uma viagem estiver sendo editada -->
+        {% if viagem %}
+            <h2>Editar Viagem</h2>
+            <form action="{{ url_for('editar_viagem', id_viagem=viagem.id_viagem) }}" method="POST">
+                <label for="data_inicio">Data de Início:</label>
+                <input type="date" name="data_inicio" value="{{ viagem.data_inicio }}" required>
+                
+                <label for="localizacao">Localização:</label>
+                <input type="text" name="localizacao" value="{{ viagem.localizacao }}" required>
+                
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        {% endif %}
+
+        <h2>Viagens Adicionadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data de Início</th>
+                    <th>Localização</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for viagem in viagens %}
+                    <tr>
+                        <td>{{ viagem.id_viagem }}</td>
+                        <td>{{ viagem.data_inicio }}</td>
+                        <td>{{ viagem.localizacao }}</td>
+                        <td>
+                            <a href="{{ url_for('editar_viagem', id_viagem=viagem.id_viagem) }}">Editar</a>
+                            <a href="{{ url_for('deletar_viagem', id_viagem=viagem.id_viagem) }}" onclick="return confirm('Você tem certeza que deseja deletar esta viagem?');">Deletar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

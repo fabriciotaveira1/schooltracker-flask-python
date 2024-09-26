@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diário de Bordo</title>
+    <title>Diário de Bordo do Marinheiro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/diariobordo.css') }}">
 </head>
@@ -28,24 +28,33 @@
     <main>
         <div class="main-content">
             <section class="new-entry">
-                <h2>Adicionar Nova Entrada</h2>
-                <form action="#" method="POST">
+                <h2>Adicionar Nova Entrada no Diário de Bordo</h2>
+                <form action="/adicionar_entrada" method="POST">
+                    <label for="cidade">Cidade (para informações climáticas):</label>
+                    <input type="text" id="cidade" name="cidade" required>
+
                     <label for="title">Título:</label>
                     <input type="text" id="title" name="title" required>
 
-                    <label for="content">Conteúdo:</label>
-                    <textarea id="content" name="content" rows="5" required></textarea>
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes" name="observacoes" rows="5" required></textarea>
 
                     <button type="submit">Adicionar Entrada</button>
                 </form>
             </section>
+
             <section class="recent-entries">
                 <h2>Entradas Recentes</h2>
                 <ul>
                     {% for entry in recent_entries %}
                         <li>
-                            <a href="#">{{ entry.title }}</a>
-                            <p>{{ entry.content[:100] }}...</p>
+                            <h3>{{ entry.title }}</h3>
+                            <p><strong>Cidade:</strong> {{ entry.cidade }}</p>
+                            <p><strong>Temperatura:</strong> {{ entry.temperatura }}°C</p>
+                            <p><strong>Velocidade do Vento:</strong> {{ entry.velocidade_do_vento }} km/h</p>
+                            <p><strong>Umidade:</strong> {{ entry.umidade_do_ar }}%</p>
+                            <p><strong>Observações:</strong> {{ entry.observacoes }}</p>
+                            <hr>
                         </li>
                     {% endfor %}
                 </ul>
@@ -53,7 +62,7 @@
         </div>
     </main>
     <footer>
-        <p>&copy; 2024 Diário de Bordo. Todos os direitos reservados.</p>
+        <p>&copy; 2024 Diário de Bordo do Marinheiro. Todos os direitos reservados.</p>
         <p><a href="#">Contato</a> | <a href="#">Política de Privacidade</a></p>
     </footer>
 </body>
