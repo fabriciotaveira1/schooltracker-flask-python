@@ -5,3 +5,114 @@
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
+
+/* Cabeçalho */
+
+header {
+    background-color: #004d40; /* Verde escuro */
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em; /* Aumenta o tamanho da fonte */
+}
+
+header hr {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.5); /* Linha horizontal com opacidade */
+    margin: 10px 0;
+}
+
+/* Navegação */
+
+/* Navegação */
+
+nav {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    background-color: #00796b; /* Verde médio */
+    color: #ffffff;
+    font-size: large;
+}
+
+.ul_left, .ul_right {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.ul_left {
+    flex: 1;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.ul_right {
+    justify-content: flex-end;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ffcc80; /* Cor de destaque no hover */
+}
+
+h4 {
+    margin: 0;
+    font-size: 1.2em; /* Tamanho da fonte para o nome do usuário */
+}
+
+/* Respeitando o layout */
+
+
+/* Rodapé */
+
+footer {
+    background-color: #004d40;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}

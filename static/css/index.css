@@ -8,7 +8,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(../assets/diarioborso.jpg);
+    background-image: url(../assets/background.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -25,6 +25,7 @@ body, html {
     align-items: center;
     width: 100%;
     height: 100%;
+    opacity: 0.9;
 }
 
 /* Estilo da caixa de login */

@@ -26,7 +26,7 @@ class ApiClima:
         return None
 
     # Método para buscar a velocidade do vento
-    def get_wind_velocity(self, cidade):
+    def get_wind_speed(self, cidade):
         weather_data = self.get_weather_data(cidade)
         if weather_data:
             return weather_data['current']['wind_kph']

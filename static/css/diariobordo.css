@@ -3,79 +3,13 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    color: #333;
+    color: #2c3e50; /* Cor do texto */
 }
 
 /* Cabeçalho */
 
-header {
-    width: 100%;
-    background-color: #222222; /* Cor de fundo do cabeçalho */
-    color: #ffffff;
-    text-align: center;
-    padding: 20px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 header h1 {
     margin: 0;
-}
-
-/* Navegação */
-
-nav {
-    height: 80px;
-    display: flex;
-    align-items: center;
-    padding: 20px 0;
-    background-color: #222222;
-    color: #ffffff;
-    font-size: large;
-}
-
-.ul_left, .ul_right {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.ul_left {
-    flex: 1;
-    justify-content: flex-start;
-    gap: 20px;
-}
-
-.ul_right {
-    justify-content: flex-end;
-}
-
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-nav ul li {
-    margin: 0 10px;
-}
-
-nav ul li a {
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-nav ul li a:hover {
-    color: #f0e68c; /* Cor de destaque no hover */
-}
-
-/* Logo */
-.logo {
-    height: 50px; /* Ajuste o tamanho da logo conforme necessário */
-    vertical-align: middle;
 }
 
 /* Conteúdo Principal */
@@ -91,7 +25,7 @@ main {
 }
 
 .new-entry, .recent-entries {
-    background-color: #f9f9f9;
+    background-color: #ecf0f1; /* Cor de fundo das entradas */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -107,13 +41,14 @@ form {
     gap: 10px;
 }
 
+
 form label {
     font-weight: bold;
 }
 
 form input, form textarea {
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #bdc3c7; /* Cor da borda */
     border-radius: 4px;
 }
 
@@ -121,7 +56,7 @@ form button {
     padding: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #222222;
+    background-color: #2980b9; /* Cor do botão */
     color: #ffffff;
     font-size: 16px;
     cursor: pointer;
@@ -129,8 +64,7 @@ form button {
 }
 
 form button:hover {
-    background-color: #f0e68c; /* Cor de destaque no hover */
-    color: black;
+    background-color: #3498db; /* Cor de destaque no hover */
 }
 
 .recent-entries ul {
@@ -140,11 +74,11 @@ form button:hover {
 
 .recent-entries li {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #bdc3c7;
 }
 
 .recent-entries li a {
-    color: #222222;
+    color: #2980b9; /* Cor do link */
     text-decoration: none;
     font-weight: bold;
 }
@@ -153,30 +87,36 @@ form button:hover {
     text-decoration: underline;
 }
 
-/* Rodapé */
-
-footer {
-    background-color: #222222;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px 0;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+select {
+    padding: 10px;
+    border: 1px solid #bdc3c7; /* Cor da borda */
+    border-radius: 4px;
+    font-size: 16px;
 }
 
-footer p {
-    margin: 0;
-    font-size: 14px;
+.alert {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
 }
 
-footer a {
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: bold;
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
-footer a:hover {
-    text-decoration: underline;
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
+
+.alert-info {
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8d9;
+}
+
+

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,34 +8,58 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/diariobordo.css') }}">
 </head>
+
 <body>
     <header>
         <h1>Diário de Bordo</h1>
-        <hr>
+        <div class="container">
+            {% if session['mensagem'] %}
+            {% if 'sucesso' in session['mensagem'] %}
+            <div class="alert alert-success">
+                {{ session['mensagem'] }}
+            </div>
+            {% elif 'erro' in session['mensagem'] %}
+            <div class="alert alert-danger">
+                {{ session['mensagem'] }}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                {{ session['mensagem'] }}
+            </div>
+            {% endif %}
+            {% with %} {% set _ = session.pop('mensagem') %} {% endwith %}
+            {% endif %}
+        </div>
         <nav>
             <ul class="ul_left">
                 <li><a href=""><img src="#" alt="Logo" class="logo"></a></li>
                 <li><a href="/logar">Home</a></li>
-                <li><a href="#">Entradas</a></li>
-                <li><a href="#">Sobre</a></li>
-                <li><h4>Seja bem-vindo, {{ nome }}</h4></li>
+                <li><a href="/viagens">Viagens</a></li>
+                <li><a href="/diario_bordo">Dashboard</a></li>
+                <li>
+                    <h4>Seja bem-vindo, {{ nome }}</h4>
+                </li>
             </ul>
             <ul class="ul_right">
                 <li><a href="#">Sair</a></li>
             </ul>
         </nav>
-        <hr>
     </header>
     <main>
         <div class="main-content">
             <section class="new-entry">
                 <h2>Adicionar Nova Entrada no Diário de Bordo</h2>
                 <form action="/adicionar_entrada" method="POST">
+                    <label for="id_viagem">Escolha a Viagem:</label>
+                    <select name="id_viagem" required>
+                        <option value="">Selecione uma viagem</option>
+                        {% for viagem in viagens %}
+                        <option value="{{ viagem.id_viagem }}">{{ viagem.localizacao }}</option>
+                        {% endfor %}
+                    </select>
+
                     <label for="cidade">Cidade (para informações climáticas):</label>
                     <input type="text" id="cidade" name="cidade" required>
-
-                    <label for="title">Título:</label>
-                    <input type="text" id="title" name="title" required>
 
                     <label for="observacoes">Observações:</label>
                     <textarea id="observacoes" name="observacoes" rows="5" required></textarea>
@@ -47,15 +72,15 @@
                 <h2>Entradas Recentes</h2>
                 <ul>
                     {% for entry in recent_entries %}
-                        <li>
-                            <h3>{{ entry.title }}</h3>
-                            <p><strong>Cidade:</strong> {{ entry.cidade }}</p>
-                            <p><strong>Temperatura:</strong> {{ entry.temperatura }}°C</p>
-                            <p><strong>Velocidade do Vento:</strong> {{ entry.velocidade_do_vento }} km/h</p>
-                            <p><strong>Umidade:</strong> {{ entry.umidade_do_ar }}%</p>
-                            <p><strong>Observações:</strong> {{ entry.observacoes }}</p>
-                            <hr>
-                        </li>
+                    <li>
+                        <h3>{{ entry.title }}</h3>
+                        <p><strong>Cidade:</strong> {{ entry.cidade }}</p>
+                        <p><strong>Temperatura:</strong> {{ entry.temperatura }}°C</p>
+                        <p><strong>Velocidade do Vento:</strong> {{ entry.velocidade_do_vento }} km/h</p>
+                        <p><strong>Umidade:</strong> {{ entry.umidade_do_ar }}%</p>
+                        <p><strong>Observações:</strong> {{ entry.observacoes }}</p>
+                        <hr>
+                    </li>
                     {% endfor %}
                 </ul>
             </section>
@@ -66,4 +91,5 @@
         <p><a href="#">Contato</a> | <a href="#">Política de Privacidade</a></p>
     </footer>
 </body>
+
 </html>
