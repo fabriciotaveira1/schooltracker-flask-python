@@ -119,4 +119,27 @@ select {
     border: 1px solid #d6d8d9;
 }
 
+#microfone, #desativar-microfone {
+    padding: 10px 10px; /* Tamanho menor */
+    font-size: 14px; /* Tamanho da fonte menor */
+    background-color: #27ae60; /* Cor de fundo do botão de microfone */
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#microfone:hover, #desativar-microfone:hover {
+    background-color: #2ecc71; /* Cor de destaque no hover */
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-top: 10px; /* Margem superior para separar dos campos acima */
+}
+
 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário de Bordo do Marinheiro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+
+<body>
+    <header>
+        <h1>Diário de Bordo</h1>
+        <nav>
+            <ul class="ul_left">
+                <li><a href="/home">Home</a></li>
+                <li><a href="/viagens">Viagens</a></li>
+                <li><a href="/diario_bordo">Dashboard</a></li>
+                <li>
+                    <h4>Seja bem-vindo, {{ nome }}</h4>
+                </li>
+            </ul>
+            <ul class="ul_right">
+                <li><a href="#">Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="main-content">
+            <section class="intro">
+                <h2>Bem-vindo ao Diário de Bordo do Marinheiro</h2>
+                <p>
+                    O Diário de Bordo do Marinheiro é uma ferramenta desenvolvida para ajudar marinheiros e viajantes
+                    a registrar suas experiências e observações durante as viagens. Com este sistema, você pode
+                    documentar detalhes importantes, como condições climáticas, locais visitados e reflexões pessoais.
+                </p>
+                <p>
+                    Acompanhe suas aventuras de forma organizada e visual, garantindo que cada momento especial
+                    esteja registrado. O sistema é fácil de usar e permite que você:
+                </p>
+                <ul>
+                    <li>Adicionar novas entradas ao diário.</li>
+                    <li>Registrar informações sobre suas viagens.</li>
+                    <li>Acompanhar dados climáticos relevantes.</li>
+                    <li>Visualizar e gerenciar suas viagens de forma intuitiva.</li>
+                </ul>
+                <p>
+                    Navegue pelo menu acima para explorar as funcionalidades e comece a registrar suas aventuras.
+                    Junte-se a outros marinheiros e compartilhe suas experiências, aprendendo com os relatos de
+                    outros usuários. A nossa comunidade está aqui para apoiar você em cada viagem.
+                </p>
+                <p>
+                    Se você está se preparando para sua próxima jornada ou apenas deseja refletir sobre
+                    suas experiências passadas, este diário é o lugar perfeito para armazenar suas memórias.
+                </p>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Diário de Bordo do Marinheiro. Todos os direitos reservados.</p>
+        <p><a href="#">Contato</a> | <a href="#">Política de Privacidade</a></p>
+    </footer>
+</body>
+
+</html>

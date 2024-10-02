@@ -1,0 +1,40 @@
+        /* Conteúdo Principal */
+        main {
+            padding: 40px; /* Aumenta o espaçamento interno */
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Aumenta o espaçamento entre seções */
+        }
+
+        .intro {
+            background-color: #ecf0f1; /* Cor de fundo da introdução */
+            padding: 30px; /* Aumenta o padding */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .intro h2 {
+            margin-top: 0;
+            color: #2980b9; /* Cor do título */
+            font-size: 2em; /* Aumenta o tamanho do título */
+            text-align: center; /* Centraliza o título */
+        }
+
+        .intro p {
+            margin: 15px 0; /* Aumenta o espaçamento entre parágrafos */
+            line-height: 1.8; /* Espaçamento entre linhas */
+            font-size: 1.1em; /* Aumenta o tamanho do texto */
+        }
+
+        .intro ul {
+            list-style: disc;
+            padding-left: 30px; /* Aumenta o padding da lista */
+        }
+
+        .intro ul li {
+            margin: 10px 0; /* Aumenta o espaçamento entre itens da lista */
+            font-size: 1.1em; /* Aumenta o tamanho do texto da lista */
+        }

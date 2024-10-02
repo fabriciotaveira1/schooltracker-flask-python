@@ -44,6 +44,10 @@ session = Session()
 def index():
     return render_template("index.html")
 
+@app.route("/home")
+def home():
+    return render_template("home.html")
+
 @app.route("/cadastro")
 def cadastro():
     return render_template("cadastro.html")
@@ -117,8 +121,10 @@ def diario_bordo():
     entries_data = []
     for entry in recent_entries:
         entries_data.append({
-            'title': entry.title,
+            'id_registro': entry.id_registro,
+            'localizacao': entry.localizacao,
             'cidade': entry.cidade,
+            'data_hora_registro': entry.data_hora_registro,
             'temperatura': entry.temperatura,
             'velocidade_do_vento': entry.velocidade_do_vento,
             'umidade_do_ar': entry.umidade_do_ar,
@@ -152,19 +158,23 @@ def adicionar_entrada():
         return redirect(url_for('diario_bordo'))  # Redireciona para a página de diário de bordo
 
      # Obter a temperatura, velocidade do vento e umidade do ar da API
-    api_clima = ApiClima()
+    api_clima = ApiClima('da7d7856826a4e9daae192630241109')
     temperatura = api_clima.get_temperature(cidade)
     umidade_do_ar = api_clima.get_humidity(cidade)
     velocidade_do_vento = api_clima.get_wind_speed(cidade)
+    localizacao_existente = session.query(Viagem.localizacao).filter_by(id_viagem=id_viagem).first()
+    localizacao = localizacao_existente.localizacao if localizacao_existente else None
     
     nova_entrada = Registro(
         id_viagem=id_viagem,
         id_usuario=session_flask['usuario_id'],
+        data_hora_registro=datetime.now(),
         cidade=cidade,
         observacoes=observacoes,
         temperatura=temperatura,
         velocidade_do_vento=velocidade_do_vento,
         umidade_do_ar=umidade_do_ar,
+        localizacao=localizacao
     )
    
 

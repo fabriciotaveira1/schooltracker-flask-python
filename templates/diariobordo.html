@@ -32,8 +32,7 @@
         </div>
         <nav>
             <ul class="ul_left">
-                <li><a href=""><img src="#" alt="Logo" class="logo"></a></li>
-                <li><a href="/logar">Home</a></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/viagens">Viagens</a></li>
                 <li><a href="/diario_bordo">Dashboard</a></li>
                 <li>
@@ -63,8 +62,11 @@
 
                     <label for="observacoes">Observações:</label>
                     <textarea id="observacoes" name="observacoes" rows="5" required></textarea>
-
-                    <button type="submit">Adicionar Entrada</button>
+                    <div class="button-container">
+                        <button type="button" id="microfone" onclick="ativarMicrofone()">🎤</button>
+                        <button type="button" id="desativar-microfone" onclick="desativarMicrofone()">🛑</button>
+                        <button type="submit">Adicionar Entrada</button>
+                    </div>
                 </form>
             </section>
 
@@ -73,8 +75,10 @@
                 <ul>
                     {% for entry in recent_entries %}
                     <li>
-                        <h3>{{ entry.title }}</h3>
+                        <h3>Registro N° {{ entry.id_registro }}</h3>
                         <p><strong>Cidade:</strong> {{ entry.cidade }}</p>
+                        <p><strong>Data/Hora:</strong> {{ entry.data_hora_registro }}</p>
+                        <p><strong>Localização:</strong> {{ entry.localizacao }}</p>
                         <p><strong>Temperatura:</strong> {{ entry.temperatura }}°C</p>
                         <p><strong>Velocidade do Vento:</strong> {{ entry.velocidade_do_vento }} km/h</p>
                         <p><strong>Umidade:</strong> {{ entry.umidade_do_ar }}%</p>
@@ -86,10 +90,7 @@
             </section>
         </div>
     </main>
-    <footer>
-        <p>&copy; 2024 Diário de Bordo do Marinheiro. Todos os direitos reservados.</p>
-        <p><a href="#">Contato</a> | <a href="#">Política de Privacidade</a></p>
-    </footer>
+    <script src="{{ url_for('static', filename='js/diariobordo.js') }}"></script>
 </body>
 
 </html>
