@@ -11,7 +11,7 @@
 
 <body>
     <header>
-        <h1>Diário de Bordo</h1>
+        <h1>MARINHEIRO</h1>
         <div class="container">
             {% if session['mensagem'] %}
             {% if 'sucesso' in session['mensagem'] %}
@@ -34,13 +34,13 @@
             <ul class="ul_left">
                 <li><a href="/home">Home</a></li>
                 <li><a href="/viagens">Viagens</a></li>
-                <li><a href="/diario_bordo">Dashboard</a></li>
-                <li>
-                    <h4>Seja bem-vindo, {{ nome }}</h4>
-                </li>
+                <li><a href="/diario_bordo">Diário de Bordo</a></li>
+            </ul>
+            <ul class="ul_middle">
+                <li><h4>Seja bem-vindo {{ nome }}</h4></li>
             </ul>
             <ul class="ul_right">
-                <li><a href="#">Sair</a></li>
+                <li><a href="/sair">Sair</a></li>
             </ul>
         </nav>
     </header>

@@ -3,7 +3,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+}
+
+@font-face {
+    font-family: 'Seact';
+    src: url('../assets/fonts/SeactClean.otf') format('otf'),
+         url('../assets/fonts/SeactRough.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* Cabeçalho */
@@ -18,6 +25,7 @@ header {
 
 header h1 {
     margin: 0;
+    padding: 10px;
     font-size: 2.5em; /* Aumenta o tamanho da fonte */
 }
 
@@ -30,19 +38,18 @@ header hr {
 
 /* Navegação */
 
-/* Navegação */
-
 nav {
     height: 80px;
     display: flex;
     align-items: center;
     padding: 20px 0;
     background-color: #00796b; /* Verde médio */
+    font-weight: bold;
     color: #ffffff;
-    font-size: large;
+    font-size: 25px;
 }
 
-.ul_left, .ul_right {
+.ul_left, .ul_right, .ul_middle {
     display: flex;
     align-items: center;
     margin: 0;
@@ -57,6 +64,12 @@ nav {
 
 .ul_right {
     justify-content: flex-end;
+}
+
+.ul_middle {
+    flex: 1;
+    justify-content: center;
+    gap: 20px;
 }
 
 nav ul {
@@ -83,7 +96,7 @@ nav ul li a:hover {
 
 h4 {
     margin: 0;
-    font-size: 1.2em; /* Tamanho da fonte para o nome do usuário */
+    font-size: 1.3em; /* Tamanho da fonte para o nome do usuário */
 }
 
 /* Respeitando o layout */
@@ -115,4 +128,23 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+/* Mensagens de Sucesso e Erro */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-info {
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8d9;
 }

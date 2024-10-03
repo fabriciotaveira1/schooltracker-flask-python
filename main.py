@@ -46,7 +46,8 @@ def index():
 
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    nome = session_flask['usuario_nome']
+    return render_template("home.html", nome=nome)
 
 @app.route("/cadastro")
 def cadastro():
@@ -103,6 +104,11 @@ def logar_usuario():
     except Exception as e:
         mensagem = f"Ocorreu um erro: {str(e)}"
         return render_template('index.html', mensagem=mensagem)
+
+@app.route('/sair')
+def sair():
+    session_flask.clear()
+    return redirect(url_for('index'))
 
 
 @app.route("/diario_bordo")
@@ -197,9 +203,10 @@ def adicionar_entrada():
 
 @app.route("/viagens", methods=["GET"])
 def viagens():
+    nome = session_flask.get('usuario_nome')
     # Busca todas as viagens do banco de dados
     viagens_existentes = session.query(Viagem).all()
-    return render_template("viagens.html", viagens=viagens_existentes)
+    return render_template("viagens.html", viagens=viagens_existentes, nome=nome)
 
 @app.route("/adicionar_viagem", methods=["POST"])
 def adicionar_viagem():
